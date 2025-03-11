@@ -1,0 +1,10 @@
+name = "quickemu-dynamic-os"
+main = "build/worker/shim.mjs"
+compatibility_date = "2025-03-10"
+
+[build]
+command = "cargo install -q worker-build && worker-build --release"
+
+[[kv_namespaces]]
+binding = "worker-dynamic-quickemu"
+id = "b4de9d30b64548a4a21325470d64a5aa"
