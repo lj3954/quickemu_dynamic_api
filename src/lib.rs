@@ -114,6 +114,7 @@ struct ListEntry {
     release: String,
     edition: Option<String>,
     arch: String,
+    #[serde(flatten)]
     status: ListStatus,
 }
 
