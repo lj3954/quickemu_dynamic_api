@@ -5,6 +5,12 @@ compatibility_date = "2025-03-10"
 workers_dev = false
 preview_urls = false
 
+observability.logs.enabled = true
+routes = [
+    { pattern = "quickemu-dynamic.lj3954.dev/list*", zone_id = "7a05fe0754f13f6cf7b4504300769fde" },
+    { pattern = "quickemu-dynamic.lj3954.dev/downloadRedirect*", zone_id = "7a05fe0754f13f6cf7b4504300769fde" },
+]
+
 [build]
 command = "cargo install -q worker-build && worker-build --release"
 
