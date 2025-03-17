@@ -23,9 +23,11 @@ async fn download_redirect(req: Request, ctx: RouteContext<()>) -> Result<Respon
             Ok(Some(value)) => match value {
                 Value::Success { url } => match Url::parse(&url) {
                     Ok(url) => Response::redirect(url),
-                    _ => Response::error("An unknown error occurred", 400),
+                    Err(_) => Response::error("An unknown error occurred", 500),
                 },
-                Value::Failure { error } => Response::error(error, 400),
+                Value::Failure { .. } => {
+                    Response::error("An error occurred while fetching the download URL", 500)
+                }
             },
             _ => Response::error("Could not find a matching entry", 400),
         };
@@ -37,7 +39,7 @@ async fn download_redirect(req: Request, ctx: RouteContext<()>) -> Result<Respon
 #[serde(tag = "status")]
 enum Value {
     Success { url: String },
-    Failure { error: String },
+    Failure,
 }
 
 #[derive(Deserialize)]
@@ -56,14 +58,14 @@ async fn list(req: Request, ctx: RouteContext<()>) -> Result<Response> {
             .execute()
             .await
         {
-            Ok(list) if !list.keys.is_empty() => {
+            Ok(list) => {
                 let response_list = List {
                     keys: list.keys,
                     os_len,
                 };
                 Response::from_json(&response_list)
             }
-            _ => Response::error("No values for selected OS", 400),
+            Err(_) => Response::error("An unknown error occured", 500),
         };
     }
     Response::error("Bad Request", 400)
